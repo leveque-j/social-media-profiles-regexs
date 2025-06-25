@@ -348,6 +348,111 @@
       }
     }
   },
+  "soundcloud": {
+    "player": {
+      "note": "Matches SoundCloud embedded player URLs, pointing to tracks or playlists via decoded API URLs inside the url= param.",
+      "regex": "(?:https?:)?\\/\\/w\\.soundcloud\\.com\\/player\\/\\?(?:[^\\s]*?&)?url=https%3A%2F%2Fapi\\.soundcloud\\.com%2F(?P<type>tracks|playlists)%2F(?P<id>[0-9]+)(?:[&\\?#][^\\s]*)?",
+      "tests": {
+        "https://w.soundcloud.com/player/?url=https%3A%2F%2Fapi.soundcloud.com%2Fplaylists%2F331919427&visual=true": {
+          "id": "331919427",
+          "type": "playlists"
+        },
+        "https://w.soundcloud.com/player/?url=https://api.soundcloud.com/resolve?url=https%3A%2F%2Fsoundcloud.com%2Fartist%2Ftrack": null,
+        "https://w.soundcloud.com/player/?url=https://api.soundcloud.com/users/12345": null,
+        "https://w.soundcloud.com/player/?visual=true&url=https%3A%2F%2Fapi.soundcloud.com%2Ftracks%2F2046431760&show_artwork=true&maxheight=80&maxwidth=640": {
+          "id": "2046431760",
+          "type": "tracks"
+        }
+      }
+    },
+    "playlist": {
+      "note": "Matches SoundCloud playlist URLs. Playlists are under /<artist>/sets/<slug> with optional subdomains and trailing slash.",
+      "regex": "(?:https?:)?\\/\\/(?:www\\.|m\\.)?soundcloud\\.com\\/(?P<artist>[A-Za-z0-9_.-]+)\\/sets\\/(?P<playlist>[A-Za-z0-9_.-]+)\\/?",
+      "tests": {
+        "https://m.soundcloud.com/foreromusic/sets/dreamscapes/": {
+          "artist": "foreromusic",
+          "playlist": "dreamscapes"
+        },
+        "https://soundcloud.com/foreromusic": null,
+        "https://soundcloud.com/foreromusic/sets/": null,
+        "https://soundcloud.com/foreromusic/sets/dreamscapes": {
+          "artist": "foreromusic",
+          "playlist": "dreamscapes"
+        },
+        "https://soundcloud.com/foreromusic/some-track": null,
+        "https://www.soundcloud.com/foreromusic/sets/dreamscapes": {
+          "artist": "foreromusic",
+          "playlist": "dreamscapes"
+        }
+      }
+    },
+    "profile": {
+      "note": "Matches SoundCloud user profile URLs with optional www. or m. subdomains, excluding the oembed endpoint.",
+      "regex": "(?:https?:)?\\/\\/(?:www\\.|m\\.)?soundcloud\\.com\\/(?!oembed\\/?$)(?P<username>[A-Za-z0-9_.-]+)\\/?",
+      "tests": {
+        "https://developers.soundcloud.com/docs/oembed#introduction": null,
+        "https://help.soundcloud.com/hc/articles/115003564308-Technical-requirements": null,
+        "https://m.soundcloud.com/foreromusic": {
+          "username": "foreromusic"
+        },
+        "https://soundcloud.com/foreromusic": {
+          "username": "foreromusic"
+        },
+        "https://soundcloud.com/foreromusic/": {
+          "username": "foreromusic"
+        },
+        "https://soundcloud.com/oembed": null,
+        "https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/users/30103207&color=ff6600&auto_play=false&show_artwork=false": null,
+        "https://w.soundcloud.com/player/?visual=true&url=https%3A%2F%2Fapi.soundcloud.com%2Ftracks%2F2046431760&show_artwork=true&maxheight=80&maxwidth=640": null,
+        "https://www.soundcloud.com/foreromusic": {
+          "username": "foreromusic"
+        },
+        "https://www.soundcloud.com/foreromusic/": {
+          "username": "foreromusic"
+        }
+      }
+    },
+    "redirect": {
+      "note": "SoundCloud short redirects to canonical track/playlist/profile URLs. Tokens are opaque; use Location header for canonical URL resolution.",
+      "regex": "(?:https?:)?\\/\\/(?:on\\.soundcloud\\.com|soundcloud\\.app\\.goo\\.gl)\\/(?P<token>[A-Za-z0-9]{5,25})\\/?",
+      "tests": {
+        "https://on.soundcloud.com/": null,
+        "https://on.soundcloud.com/w9Uvv666ksyKCFto9": {
+          "token": "w9Uvv666ksyKCFto9"
+        },
+        "https://on.soundcloud.com/wrong?query=true": null,
+        "https://soundcloud.app.goo.gl/": null,
+        "https://soundcloud.app.goo.gl/a1b2C": {
+          "token": "a1b2C"
+        }
+      }
+    },
+    "track": {
+      "note": "Matches SoundCloud track URLs with optional www. or m. subdomains and optional secret /s-XXX suffix.",
+      "regex": "(?:https?:)?\\/\\/(?:www\\.|m\\.)?soundcloud\\.com\\/(?P<artist>[A-Za-z0-9_.-]+)\\/(?P<track>[A-Za-z0-9_.-]+)(?:\\/s-(?P<secret>[A-Za-z0-9]+))?\\/?",
+      "tests": {
+        "https://m.soundcloud.com/asrilos/symphony-of-light": {
+          "artist": "asrilos",
+          "track": "symphony-of-light"
+        },
+        "https://soundcloud.com/cade-turner/cade-turner-symphony-of-light": {
+          "artist": "cade-turner",
+          "track": "cade-turner-symphony-of-light"
+        },
+        "https://soundcloud.com/foreromusic": null,
+        "https://soundcloud.com/foreromusic/the-secret-track/s-AbCdEf123": {
+          "artist": "foreromusic",
+          "secret": "AbCdEf123",
+          "track": "the-secret-track"
+        },
+        "https://soundcloud.com/oembed": null,
+        "https://www.soundcloud.com/foreromusic/track-name/": {
+          "artist": "foreromusic",
+          "track": "track-name"
+        }
+      }
+    }
+  },
   "stackexchange": {
     "user": {
       "note": "This is the meta-platform above stackoverflow, etc. Username can be changed at any time, user_id is persistent.",
@@ -472,7 +577,7 @@
   },
   "youtube": {
     "channel": {
-      "regex": "^(?:https?:)?\\/\\/(?:www\\.)?(?:youtube\\.com\\/(?:channel\\/(?P<id>[A-Za-z0-9_-]+)|c\\/(?P<custom>[A-Za-z0-9_-]+)|@?(?P<handle>[A-Za-z0-9_-]+)))\\/?$",
+      "regex": "^(?:https?:)?\\/\\/(?:www\\.)?(?:youtube\\.com\\/(?:channel\\/(?P<id>[A-Za-z0-9_-]+)|c\\/(?P<custom>[A-Za-z0-9_-]+)|@?(?P<handle>[A-Za-z0-9_-]+)))(?:\\/videos)?\\/?$",
       "tests": {
         "https://www.youtube.com/@JPPGmbH": {
           "handle": "JPPGmbH"
@@ -480,10 +585,13 @@
         "https://www.youtube.com/c/JPPGmbH": {
           "custom": "JPPGmbH"
         },
+        "https://www.youtube.com/c/JPPGmbH/videos": {
+          "custom": "JPPGmbH"
+        },
         "https://www.youtube.com/channel/UC3y00Z1zFPc-8Z9xg8ydC-A": {
           "id": "UC3y00Z1zFPc-8Z9xg8ydC-A"
         },
-        "https://www.youtube.com/channel/UCtAh1m085QkEKYNg0j_6r8A": {
+        "https://www.youtube.com/channel/UCtAh1m085QkEKYNg0j_6r8A/videos": {
           "id": "UCtAh1m085QkEKYNg0j_6r8A"
         },
         "https://www.youtube.com/user/JPPGmbH": null,

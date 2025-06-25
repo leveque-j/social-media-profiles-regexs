@@ -40,6 +40,7 @@ You might also open an issue, of course, I'm happy to help!
 - [reddit](#reddit)
 - [skype](#skype)
 - [snapchat](#snapchat)
+- [soundcloud](#soundcloud)
 - [stackexchange](#stackexchange)
 - [stackexchange network](#stackexchange-network)
 - [stackoverflow](#stackoverflow)
@@ -141,7 +142,7 @@ Examples:
 
 ### profile by id
 ```regex
-(?:https?:)?\/\/(?:www\.)facebook.com\/(?:profile.php\?id=)?(?P<id>[0-9]+)
+(?:https?:)?\/\/(?:www\.)facebook.com/(?:profile.php\?id=)?(?P<id>[0-9]+)
 ```
 
 
@@ -388,6 +389,70 @@ Examples:
 - https://www.snapchat.com/add/peterparker
 
 
+## soundcloud
+
+### player
+```regex
+(?:https?:)?\/\/w\.soundcloud\.com\/player\/\?(?:[^\s]*?&)?url=https%3A%2F%2Fapi\.soundcloud\.com%2F(?P<type>tracks|playlists)%2F(?P<id>[0-9]+)(?:[&\?#][^\s]*)?
+```
+Matches SoundCloud embedded player URLs, pointing to tracks or playlists via decoded API URLs inside the url= param.
+
+Examples: 
+
+- https://w.soundcloud.com/player/?url=https%3A%2F%2Fapi.soundcloud.com%2Fplaylists%2F331919427&visual=true
+- https://w.soundcloud.com/player/?visual=true&url=https%3A%2F%2Fapi.soundcloud.com%2Ftracks%2F2046431760&show_artwork=true&maxheight=80&maxwidth=640
+
+### playlist
+```regex
+(?:https?:)?\/\/(?:www\.|m\.)?soundcloud\.com\/(?P<artist>[A-Za-z0-9_.-]+)\/sets\/(?P<playlist>[A-Za-z0-9_.-]+)\/?
+```
+Matches SoundCloud playlist URLs. Playlists are under /<artist>/sets/<slug> with optional subdomains and trailing slash.
+
+Examples: 
+
+- https://m.soundcloud.com/foreromusic/sets/dreamscapes/
+- https://soundcloud.com/foreromusic/sets/dreamscapes
+- https://www.soundcloud.com/foreromusic/sets/dreamscapes
+
+### profile
+```regex
+(?:https?:)?\/\/(?:www\.|m\.)?soundcloud\.com\/(?!oembed\/?$)(?P<username>[A-Za-z0-9_.-]+)\/?
+```
+Matches SoundCloud user profile URLs with optional www. or m. subdomains, excluding the oembed endpoint.
+
+Examples: 
+
+- https://m.soundcloud.com/foreromusic
+- https://soundcloud.com/foreromusic
+- https://soundcloud.com/foreromusic/
+- https://www.soundcloud.com/foreromusic
+- https://www.soundcloud.com/foreromusic/
+
+### redirect
+```regex
+(?:https?:)?\/\/(?:on\.soundcloud\.com|soundcloud\.app\.goo\.gl)\/(?P<token>[A-Za-z0-9]{5,25})\/?
+```
+SoundCloud short redirects to canonical track/playlist/profile URLs. Tokens are opaque; use Location header for canonical URL resolution.
+
+Examples: 
+
+- https://on.soundcloud.com/w9Uvv666ksyKCFto9
+- https://soundcloud.app.goo.gl/a1b2C
+
+### track
+```regex
+(?:https?:)?\/\/(?:www\.|m\.)?soundcloud\.com\/(?P<artist>[A-Za-z0-9_.-]+)\/(?P<track>[A-Za-z0-9_.-]+)(?:\/s-(?P<secret>[A-Za-z0-9]+))?\/?
+```
+Matches SoundCloud track URLs with optional www. or m. subdomains and optional secret /s-XXX suffix.
+
+Examples: 
+
+- https://m.soundcloud.com/asrilos/symphony-of-light
+- https://soundcloud.com/cade-turner/cade-turner-symphony-of-light
+- https://soundcloud.com/foreromusic/the-secret-track/s-AbCdEf123
+- https://www.soundcloud.com/foreromusic/track-name/
+
+
 ## stackexchange
 
 ### user
@@ -516,7 +581,7 @@ Examples:
 
 ### channel
 ```regex
-^(?:https?:)?\/\/(?:www\.)?(?:youtube\.com\/(?:channel\/(?P<id>[A-Za-z0-9_-]+)|c\/(?P<custom>[A-Za-z0-9_-]+)|@?(?P<handle>[A-Za-z0-9_-]+)))\/?$
+^(?:https?:)?\/\/(?:www\.)?(?:youtube\.com\/(?:channel\/(?P<id>[A-Za-z0-9_-]+)|c\/(?P<custom>[A-Za-z0-9_-]+)|@?(?P<handle>[A-Za-z0-9_-]+)))(?:\/videos)?\/?$
 ```
 
 
@@ -524,8 +589,9 @@ Examples:
 
 - https://www.youtube.com/@JPPGmbH
 - https://www.youtube.com/c/JPPGmbH
+- https://www.youtube.com/c/JPPGmbH/videos
 - https://www.youtube.com/channel/UC3y00Z1zFPc-8Z9xg8ydC-A
-- https://www.youtube.com/channel/UCtAh1m085QkEKYNg0j_6r8A
+- https://www.youtube.com/channel/UCtAh1m085QkEKYNg0j_6r8A/videos
 
 ### user
 ```regex
@@ -558,6 +624,6 @@ e.g. `angellist__company` instead of just `company` in the angellist company reg
 as some regex implementations don't support defining subgroups more than once which would introduce errors if  the same subgroup name is used in two or more platforms.
 
 ```regex
-(?P<angellist__company>(?:https?:)?\/\/angel\.co\/company\/(?P<angellist__company__company>[A-z0-9_-]+)(?:\/(?P<angellist__company__company_subpage>[A-z0-9-]+))?)|(?P<angellist__job>(?:https?:)?\/\/angel\.co\/company\/(?P<angellist__job__company>[A-z0-9_-]+)\/jobs\/(?P<angellist__job__job_permalink>(?P<angellist__job__job_id>[0-9]+)-(?P<angellist__job__job_slug>[A-z0-9-]+)))|(?P<angellist__user>(?:https?:)?\/\/angel\.co\/(?P<angellist__user__type>u|p)\/(?P<angellist__user__user>[A-z0-9_-]+))|(?P<crunchbase__company>(?:https?:)?\/\/crunchbase\.com\/organization\/(?P<crunchbase__company__organization>[A-z0-9_-]+))|(?P<crunchbase__person>(?:https?:)?\/\/crunchbase\.com\/person\/(?P<crunchbase__person__person>[A-z0-9_-]+))|(?P<email__mailto>(?:mailto:)?(?P<email__mailto__email>[A-z0-9_.+-]+@[A-z0-9_.-]+\.[A-z]+))|(?P<facebook__profile>(?:https?:)?\/\/(?:www\.)?(?:facebook|fb)\.com\/(?P<facebook__profile__profile>(?![A-z]+\.php)(?!marketplace|gaming|watch|me|messages|help|search|groups)[A-z0-9_\-\.]+)\/?)|(?P<facebook__profile_by_id>(?:https?:)?\/\/(?:www\.)facebook.com/(?:profile.php\?id=)?(?P<facebook__profile_by_id__id>[0-9]+))|(?P<github__repo>(?:https?:)?\/\/(?:www\.)?github\.com\/(?P<github__repo__login>[A-z0-9_-]+)\/(?P<github__repo__repo>[A-z0-9_-]+)\/?)|(?P<github__user>(?:https?:)?\/\/(?:www\.)?github\.com\/(?P<github__user__login>[A-z0-9_-]+)\/?)|(?P<google_plus__user_id>(?:https?:)?\/\/plus\.google\.com\/(?P<google_plus__user_id__id>[0-9]{21}))|(?P<google_plus__username>(?:https?:)?\/\/plus\.google\.com\/\+(?P<google_plus__username__username>[A-z0-9+]+))|(?P<hackernews__item>(?:https?:)?\/\/news\.ycombinator\.com\/item\?id=(?P<hackernews__item__item>[0-9]+))|(?P<hackernews__user>(?:https?:)?\/\/news\.ycombinator\.com\/user\?id=(?P<hackernews__user__user>[A-z0-9_-]+))|(?P<instagram__profile>(?:https?:)?\/\/(?:www\.)?(?:instagram\.com|instagr\.am)\/(?P<instagram__profile__username>[A-Za-z0-9_](?:(?:[A-Za-z0-9_]|(?:\.(?!\.))){0,28}(?:[A-Za-z0-9_]))?))|(?P<linkedin__company>(?:https?:)?\/\/(?:[\w]+\.)?linkedin\.com\/(?P<linkedin__company__company_type>(company)|(school))\/(?P<linkedin__company__company_permalink>[A-z0-9-À-ÿ\.]+)\/?)|(?P<linkedin__post>(?:https?:)?\/\/(?:[\w]+\.)?linkedin\.com\/feed\/update\/urn:li:activity:(?P<linkedin__post__activity_id>[0-9]+)\/?)|(?P<linkedin__profile>(?:https?:)?\/\/(?:[\w]+\.)?linkedin\.com\/in\/(?P<linkedin__profile__permalink>[\w\-\_À-ÿ%]+)\/?)|(?P<linkedin__profile_pub>(?:https?:)?\/\/(?:[\w]+\.)?linkedin\.com\/pub\/(?P<linkedin__profile_pub__permalink_pub>[A-z0-9_-]+)(?:\/[A-z0-9]+){3}\/?)|(?P<medium__post>(?:https?:)?\/\/medium\.com\/(?:(?:@(?P<medium__post__username>[A-z0-9]+))|(?P<medium__post__publication>[a-z-]+))\/(?P<medium__post__slug>[a-z0-9\-]+)-(?P<medium__post__post_id>[A-z0-9]+)(?:\?.*)?)|(?P<medium__post_of_subdomain_publication>(?:https?:)?\/\/(?P<medium__post_of_subdomain_publication__publication>(?!www)[a-z-]+)\.medium\.com\/(?P<medium__post_of_subdomain_publication__slug>[a-z0-9\-]+)-(?P<medium__post_of_subdomain_publication__post_id>[A-z0-9]+)(?:\?.*)?)|(?P<medium__user>(?:https?:)?\/\/medium\.com\/@(?P<medium__user__username>[A-z0-9]+)(?:\?.*)?)|(?P<medium__user_by_id>(?:https?:)?\/\/medium\.com\/u\/(?P<medium__user_by_id__user_id>[A-z0-9]+)(?:\?.*))|(?P<phone__phone_number>(?:tel|phone|mobile):(?P<phone__phone_number__number>\+?[0-9. -]+))|(?P<reddit__user>(?:https?:)?\/\/(?:[a-z]+\.)?reddit\.com\/(?:u(?:ser)?)\/(?P<reddit__user__username>[A-z0-9\-\_]*)\/?)|(?P<skype__profile>(?:(?:callto|skype):)(?P<skype__profile__username>[a-z][a-z0-9\.,\-_]{5,31})(?:\?(?:add|call|chat|sendfile|userinfo))?)|(?P<snapchat__profile>(?:https?:)?\/\/(?:www\.)?snapchat\.com\/add\/(?P<snapchat__profile__username>[A-z0-9\.\_\-]+)\/?)|(?P<stackexchange__user>(?:https?:)?\/\/(?:www\.)?stackexchange\.com\/users\/(?P<stackexchange__user__id>[0-9]+)\/(?P<stackexchange__user__username>[A-z0-9-_.]+)\/?)|(?P<stackexchange_network__user>(?:https?:)?\/\/(?:(?P<stackexchange_network__user__community>[a-z]+(?!www))\.)?stackexchange\.com\/users\/(?P<stackexchange_network__user__id>[0-9]+)\/(?P<stackexchange_network__user__username>[A-z0-9-_.]+)\/?)|(?P<stackoverflow__question>(?:https?:)?\/\/(?:www\.)?stackoverflow\.com\/questions\/(?P<stackoverflow__question__id>[0-9]+)\/(?P<stackoverflow__question__title>[A-z0-9-_.]+)\/?)|(?P<stackoverflow__user>(?:https?:)?\/\/(?:www\.)?stackoverflow\.com\/users\/(?P<stackoverflow__user__id>[0-9]+)\/(?P<stackoverflow__user__username>[A-z0-9-_.]+)\/?)|(?P<telegram__profile>(?:https?:)?\/\/(?:t(?:elegram)?\.me|telegram\.org)\/(?P<telegram__profile__username>[a-z0-9\_]{5,32})\/?)|(?P<twitter__status>(?:https?:)?\/\/(?:[A-z]+\.)?twitter\.com\/@?(?P<twitter__status__username>[A-z0-9_]+)\/status\/(?P<twitter__status__tweet_id>[0-9]+)\/?)|(?P<twitter__user>(?:https?:)?\/\/(?:[A-z]+\.)?twitter\.com\/@?(?!home|share|privacy|tos)(?P<twitter__user__username>[A-z0-9_]+)\/?)|(?P<vimeo__user>(?:https?:)?\/\/vimeo\.com\/user(?P<vimeo__user__id>[0-9]+))|(?P<vimeo__video>(?:https?:)?\/\/(?:(?:www)?vimeo\.com|player.vimeo.com\/video)\/(?P<vimeo__video__id>[0-9]+))|(?P<xing__profile>(?:https?:)?\/\/(?:www\.)?xing.com\/profile\/(?P<xing__profile__slug>[A-z0-9-\_]+))|(?P<youtube__channel>^(?:https?:)?\/\/(?:www\.)?(?:youtube\.com\/(?:channel\/(?P<youtube__channel__id>[A-Za-z0-9_-]+)|c\/(?P<youtube__channel__custom>[A-Za-z0-9_-]+)|@?(?P<youtube__channel__handle>[A-Za-z0-9_-]+)))\/?$)|(?P<youtube__user>(?:https?:)?\/\/(?:[A-z]+\.)?youtube.com\/user\/(?P<youtube__user__username>[A-z0-9]+)\/?)|(?P<youtube__video>(?:https?:)?\/\/(?:(?:www\.)?youtube\.com\/(?:watch\?v=|embed\/)|youtu\.be\/)(?P<youtube__video__id>[A-z0-9\-\_]+))
+(?P<angellist__company>(?:https?:)?\/\/angel\.co\/company\/(?P<angellist__company__company>[A-z0-9_-]+)(?:\/(?P<angellist__company__company_subpage>[A-z0-9-]+))?)|(?P<angellist__job>(?:https?:)?\/\/angel\.co\/company\/(?P<angellist__job__company>[A-z0-9_-]+)\/jobs\/(?P<angellist__job__job_permalink>(?P<angellist__job__job_id>[0-9]+)-(?P<angellist__job__job_slug>[A-z0-9-]+)))|(?P<angellist__user>(?:https?:)?\/\/angel\.co\/(?P<angellist__user__type>u|p)\/(?P<angellist__user__user>[A-z0-9_-]+))|(?P<crunchbase__company>(?:https?:)?\/\/crunchbase\.com\/organization\/(?P<crunchbase__company__organization>[A-z0-9_-]+))|(?P<crunchbase__person>(?:https?:)?\/\/crunchbase\.com\/person\/(?P<crunchbase__person__person>[A-z0-9_-]+))|(?P<email__mailto>(?:mailto:)?(?P<email__mailto__email>[A-z0-9_.+-]+@[A-z0-9_.-]+\.[A-z]+))|(?P<facebook__profile>(?:https?:)?\/\/(?:www\.)?(?:facebook|fb)\.com\/(?P<facebook__profile__profile>(?![A-z]+\.php)(?!marketplace|gaming|watch|me|messages|help|search|groups)[A-z0-9_\-\.]+)\/?)|(?P<facebook__profile_by_id>(?:https?:)?\/\/(?:www\.)facebook.com/(?:profile.php\?id=)?(?P<facebook__profile_by_id__id>[0-9]+))|(?P<github__repo>(?:https?:)?\/\/(?:www\.)?github\.com\/(?P<github__repo__login>[A-z0-9_-]+)\/(?P<github__repo__repo>[A-z0-9_-]+)\/?)|(?P<github__user>(?:https?:)?\/\/(?:www\.)?github\.com\/(?P<github__user__login>[A-z0-9_-]+)\/?)|(?P<google_plus__user_id>(?:https?:)?\/\/plus\.google\.com\/(?P<google_plus__user_id__id>[0-9]{21}))|(?P<google_plus__username>(?:https?:)?\/\/plus\.google\.com\/\+(?P<google_plus__username__username>[A-z0-9+]+))|(?P<hackernews__item>(?:https?:)?\/\/news\.ycombinator\.com\/item\?id=(?P<hackernews__item__item>[0-9]+))|(?P<hackernews__user>(?:https?:)?\/\/news\.ycombinator\.com\/user\?id=(?P<hackernews__user__user>[A-z0-9_-]+))|(?P<instagram__profile>(?:https?:)?\/\/(?:www\.)?(?:instagram\.com|instagr\.am)\/(?P<instagram__profile__username>[A-Za-z0-9_](?:(?:[A-Za-z0-9_]|(?:\.(?!\.))){0,28}(?:[A-Za-z0-9_]))?))|(?P<linkedin__company>(?:https?:)?\/\/(?:[\w]+\.)?linkedin\.com\/(?P<linkedin__company__company_type>(company)|(school))\/(?P<linkedin__company__company_permalink>[A-z0-9-À-ÿ\.]+)\/?)|(?P<linkedin__post>(?:https?:)?\/\/(?:[\w]+\.)?linkedin\.com\/feed\/update\/urn:li:activity:(?P<linkedin__post__activity_id>[0-9]+)\/?)|(?P<linkedin__profile>(?:https?:)?\/\/(?:[\w]+\.)?linkedin\.com\/in\/(?P<linkedin__profile__permalink>[\w\-\_À-ÿ%]+)\/?)|(?P<linkedin__profile_pub>(?:https?:)?\/\/(?:[\w]+\.)?linkedin\.com\/pub\/(?P<linkedin__profile_pub__permalink_pub>[A-z0-9_-]+)(?:\/[A-z0-9]+){3}\/?)|(?P<medium__post>(?:https?:)?\/\/medium\.com\/(?:(?:@(?P<medium__post__username>[A-z0-9]+))|(?P<medium__post__publication>[a-z-]+))\/(?P<medium__post__slug>[a-z0-9\-]+)-(?P<medium__post__post_id>[A-z0-9]+)(?:\?.*)?)|(?P<medium__post_of_subdomain_publication>(?:https?:)?\/\/(?P<medium__post_of_subdomain_publication__publication>(?!www)[a-z-]+)\.medium\.com\/(?P<medium__post_of_subdomain_publication__slug>[a-z0-9\-]+)-(?P<medium__post_of_subdomain_publication__post_id>[A-z0-9]+)(?:\?.*)?)|(?P<medium__user>(?:https?:)?\/\/medium\.com\/@(?P<medium__user__username>[A-z0-9]+)(?:\?.*)?)|(?P<medium__user_by_id>(?:https?:)?\/\/medium\.com\/u\/(?P<medium__user_by_id__user_id>[A-z0-9]+)(?:\?.*))|(?P<phone__phone_number>(?:tel|phone|mobile):(?P<phone__phone_number__number>\+?[0-9. -]+))|(?P<reddit__user>(?:https?:)?\/\/(?:[a-z]+\.)?reddit\.com\/(?:u(?:ser)?)\/(?P<reddit__user__username>[A-z0-9\-\_]*)\/?)|(?P<skype__profile>(?:(?:callto|skype):)(?P<skype__profile__username>[a-z][a-z0-9\.,\-_]{5,31})(?:\?(?:add|call|chat|sendfile|userinfo))?)|(?P<snapchat__profile>(?:https?:)?\/\/(?:www\.)?snapchat\.com\/add\/(?P<snapchat__profile__username>[A-z0-9\.\_\-]+)\/?)|(?P<soundcloud__player>(?:https?:)?\/\/w\.soundcloud\.com\/player\/\?(?:[^\s]*?&)?url=https%3A%2F%2Fapi\.soundcloud\.com%2F(?P<soundcloud__player__type>tracks|playlists)%2F(?P<soundcloud__player__id>[0-9]+)(?:[&\?#][^\s]*)?)|(?P<soundcloud__playlist>(?:https?:)?\/\/(?:www\.|m\.)?soundcloud\.com\/(?P<soundcloud__playlist__artist>[A-Za-z0-9_.-]+)\/sets\/(?P<soundcloud__playlist__playlist>[A-Za-z0-9_.-]+)\/?)|(?P<soundcloud__profile>(?:https?:)?\/\/(?:www\.|m\.)?soundcloud\.com\/(?!oembed\/?$)(?P<soundcloud__profile__username>[A-Za-z0-9_.-]+)\/?)|(?P<soundcloud__redirect>(?:https?:)?\/\/(?:on\.soundcloud\.com|soundcloud\.app\.goo\.gl)\/(?P<soundcloud__redirect__token>[A-Za-z0-9]{5,25})\/?)|(?P<soundcloud__track>(?:https?:)?\/\/(?:www\.|m\.)?soundcloud\.com\/(?P<soundcloud__track__artist>[A-Za-z0-9_.-]+)\/(?P<soundcloud__track__track>[A-Za-z0-9_.-]+)(?:\/s-(?P<soundcloud__track__secret>[A-Za-z0-9]+))?\/?)|(?P<stackexchange__user>(?:https?:)?\/\/(?:www\.)?stackexchange\.com\/users\/(?P<stackexchange__user__id>[0-9]+)\/(?P<stackexchange__user__username>[A-z0-9-_.]+)\/?)|(?P<stackexchange_network__user>(?:https?:)?\/\/(?:(?P<stackexchange_network__user__community>[a-z]+(?!www))\.)?stackexchange\.com\/users\/(?P<stackexchange_network__user__id>[0-9]+)\/(?P<stackexchange_network__user__username>[A-z0-9-_.]+)\/?)|(?P<stackoverflow__question>(?:https?:)?\/\/(?:www\.)?stackoverflow\.com\/questions\/(?P<stackoverflow__question__id>[0-9]+)\/(?P<stackoverflow__question__title>[A-z0-9-_.]+)\/?)|(?P<stackoverflow__user>(?:https?:)?\/\/(?:www\.)?stackoverflow\.com\/users\/(?P<stackoverflow__user__id>[0-9]+)\/(?P<stackoverflow__user__username>[A-z0-9-_.]+)\/?)|(?P<telegram__profile>(?:https?:)?\/\/(?:t(?:elegram)?\.me|telegram\.org)\/(?P<telegram__profile__username>[a-z0-9\_]{5,32})\/?)|(?P<twitter__status>(?:https?:)?\/\/(?:[A-z]+\.)?twitter\.com\/@?(?P<twitter__status__username>[A-z0-9_]+)\/status\/(?P<twitter__status__tweet_id>[0-9]+)\/?)|(?P<twitter__user>(?:https?:)?\/\/(?:[A-z]+\.)?twitter\.com\/@?(?!home|share|privacy|tos)(?P<twitter__user__username>[A-z0-9_]+)\/?)|(?P<vimeo__user>(?:https?:)?\/\/vimeo\.com\/user(?P<vimeo__user__id>[0-9]+))|(?P<vimeo__video>(?:https?:)?\/\/(?:(?:www)?vimeo\.com|player.vimeo.com\/video)\/(?P<vimeo__video__id>[0-9]+))|(?P<xing__profile>(?:https?:)?\/\/(?:www\.)?xing.com\/profile\/(?P<xing__profile__slug>[A-z0-9-\_]+))|(?P<youtube__channel>^(?:https?:)?\/\/(?:www\.)?(?:youtube\.com\/(?:channel\/(?P<youtube__channel__id>[A-Za-z0-9_-]+)|c\/(?P<youtube__channel__custom>[A-Za-z0-9_-]+)|@?(?P<youtube__channel__handle>[A-Za-z0-9_-]+)))(?:\/videos)?\/?$)|(?P<youtube__user>(?:https?:)?\/\/(?:[A-z]+\.)?youtube.com\/user\/(?P<youtube__user__username>[A-z0-9]+)\/?)|(?P<youtube__video>(?:https?:)?\/\/(?:(?:www\.)?youtube\.com\/(?:watch\?v=|embed\/)|youtu\.be\/)(?P<youtube__video__id>[A-z0-9\-\_]+))
 
 ```

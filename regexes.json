@@ -513,6 +513,52 @@
       }
     }
   },
+  "spotify": {
+    "artist": {
+      "note": "Matches Spotify artist profile URLs and URIs",
+      "regex": "^(?:https?:\\/\\/|\\/\\/)?(?:open\\.)?spotify\\.com\\/artist\\/(?P<id>[A-Za-z0-9]{22})(?:\\?.*)?$|^spotify:artist:(?P<uri_id>[A-Za-z0-9]{22})$",
+      "tests": {
+        "http://open.spotify.com/artist/1vCWHaC5f2uS3yhpwWbIA6": {
+          "id": "1vCWHaC5f2uS3yhpwWbIA6"
+        },
+        "https://open.spotify.com/album/1vCWHaC5f2uS3yhpwWbIA6": null,
+        "https://open.spotify.com/artist/1vCWHaC5f2uS3yhpwWbIA6": {
+          "id": "1vCWHaC5f2uS3yhpwWbIA6"
+        },
+        "https://open.spotify.com/artist/1vCWHaC5f2uS3yhpwWbIA6?si=dummycode&utm_source=whoknows": {
+          "id": "1vCWHaC5f2uS3yhpwWbIA6"
+        },
+        "https://open.spotify.com/artist/invalid_id": null,
+        "https://spotify.com": null,
+        "https://www.spotify.com/artist/1vCWHaC5f2uS3yhpwWbIA6": null,
+        "open.spotify.com/artist/1vCWHaC5f2uS3yhpwWbIA6": {
+          "id": "1vCWHaC5f2uS3yhpwWbIA6"
+        },
+        "spotify:album:1vCWHaC5f2uS3yhpwWbIA6": null,
+        "spotify:artist:1vCWHaC5f2uS3yhpwWbIA6": {
+          "uri_id": "1vCWHaC5f2uS3yhpwWbIA6"
+        }
+      }
+    },
+    "playlist": {
+      "note": "Matches Spotify playlist URLs and URIs.",
+      "regex": "^(?:https?:\\/\\/|\\/\\/)?(?:open\\.)?spotify\\.com\\/playlist\\/(?P<id>[A-Za-z0-9]{22})(?:\\?.*)?$|^spotify:playlist:(?P<uri_id>[A-Za-z0-9]{22})$",
+      "tests": {
+        "//open.spotify.com/playlist/37i9dQZF1DXcBWIGoYBM5M?si=xyz": {
+          "id": "37i9dQZF1DXcBWIGoYBM5M"
+        },
+        "http://open.spotify.com/playlist/37i9dQZF1DXcBWIGoYBM5M": {
+          "id": "37i9dQZF1DXcBWIGoYBM5M"
+        },
+        "https://open.spotify.com/playlist/37i9dQZF1DXcBWIGoYBM5M": {
+          "id": "37i9dQZF1DXcBWIGoYBM5M"
+        },
+        "spotify:playlist:37i9dQZF1DXcBWIGoYBM5M": {
+          "uri_id": "37i9dQZF1DXcBWIGoYBM5M"
+        }
+      }
+    }
+  },
   "stackexchange": {
     "user": {
       "note": "This is the meta-platform above stackoverflow, etc. Username can be changed at any time, user_id is persistent.",

@@ -17,4 +17,4 @@ if __name__ == "__main__":
         json.dump(regex_file_content, f, sort_keys=True, indent=2)
 
     # replace input file if everything went right
-    os.rename(REGEXES_FILE_TMP, REGEXES_FILE)
+    os.replace(REGEXES_FILE_TMP, REGEXES_FILE) # overwrites on Windows, macOS, Linux

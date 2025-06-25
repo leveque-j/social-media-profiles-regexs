@@ -685,32 +685,55 @@
   },
   "twitter": {
     "status": {
-      "regex": "(?:https?:)?\\/\\/(?:[A-z]+\\.)?twitter\\.com\\/@?(?P<username>[A-z0-9_]+)\\/status\\/(?P<tweet_id>[0-9]+)\\/?",
+      "note": "Matches tweets on twitter.com or x.com including optional @ prefix on username.",
+      "regex": "^(?:https?:\\/\\/|\\/\\/)?(?:www\\.)?(?:twitter\\.com|x\\.com)\\/@?(?P<username>[A-Za-z0-9_]+)\\/status\\/(?P<tweet_id>[0-9]+)\\/?$",
       "tests": {
+        "https://twitter.com/karllorey/status/": null,
         "https://twitter.com/karllorey/status/1259924082067374088": {
+          "tweet_id": "1259924082067374088",
+          "username": "karllorey"
+        },
+        "https://www.x.com/karllorey/status/1259924082067374088/": {
+          "tweet_id": "1259924082067374088",
+          "username": "karllorey"
+        },
+        "https://x.com/karllorey/status/1259924082067374088": {
+          "tweet_id": "1259924082067374088",
+          "username": "karllorey"
+        },
+        "x.com/@karllorey/status/1259924082067374088": {
           "tweet_id": "1259924082067374088",
           "username": "karllorey"
         }
       }
     },
     "user": {
-      "note": "Allowed for usernames are alphanumeric characters and underscores.",
-      "regex": "(?:https?:)?\\/\\/(?:[A-z]+\\.)?twitter\\.com\\/@?(?!home|share|privacy|tos)(?P<username>[A-z0-9_]+)\\/?",
+      "note": "Matches Twitter/X profiles via /@username, /username, and intent links with screen_name or user_id. Only public user profile URLs.",
+      "regex": "^(?:https?:\\/\\/|\\/\\/)?(?:www\\.)?(?:twitter\\.com|x\\.com)\\/(?:(?:@?(?P<username>(?!home$|share$|privacy$|tos$)[A-Za-z0-9_]+))|intent\\/(?:user|follow)\\?(?:[^#?&=]+=[^#?&=]*&)*(?:screen_name=(?P<screen_name>[A-Za-z0-9_]+)|user_id=(?P<user_id>[0-9]+))(?:&[^#]*)*)\\/?(?:[?#].*)?$",
       "tests": {
-        "htt://twitter.com/karllorey": null,
-        "http://twitter.com/@karllorey": {
-          "username": "karllorey"
-        },
-        "http://twitter.com/karllorey": {
+        "https://twitter.com/@karllorey": {
           "username": "karllorey"
         },
         "https://twitter.com/home": null,
+        "https://twitter.com/intent/user?ref=xyz&screen_name=NASA&src=twsrc": {
+          "screen_name": "NASA"
+        },
+        "https://twitter.com/intent/user?screen_name=NASA": {
+          "screen_name": "NASA"
+        },
+        "https://twitter.com/intent/user?src=twsrc&user_id=3308337&ref=abc": {
+          "user_id": "3308337"
+        },
+        "https://twitter.com/intent/user?user_id=3308337": {
+          "user_id": "3308337"
+        },
         "https://twitter.com/karllorey": {
           "username": "karllorey"
         },
         "https://twitter.com/privacy": null,
-        "https://twitter.com/share": null,
-        "https://twitter.com/tos": null
+        "https://x.com/karllorey": {
+          "username": "karllorey"
+        }
       }
     }
   },

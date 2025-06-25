@@ -56,6 +56,39 @@
       }
     }
   },
+  "discord": {
+    "server_invite": {
+      "note": "Matches Discord server invite URLs from discord.gg or discord.com/invite, with or without protocol or www.",
+      "regex": "^(?:https?:\\/\\/|\\/\\/)?(?:www\\.)?(?:discord\\.gg|discord\\.com\\/invite)\\/(?P<code>[A-Za-z0-9-]+)\\/?$",
+      "tests": {
+        "discord.gg/aRJmz95KWa": {
+          "code": "aRJmz95KWa"
+        },
+        "http://discord.com/invite/aRJmz95KWa/": {
+          "code": "aRJmz95KWa"
+        },
+        "http://discord.gg/aRJmz95KWa": {
+          "code": "aRJmz95KWa"
+        },
+        "https://discord.com/": null,
+        "https://discord.com/invite/": null,
+        "https://discord.com/invite/aRJmz95KWa": {
+          "code": "aRJmz95KWa"
+        },
+        "https://discord.com/users/123456": null,
+        "https://discord.gg/": null,
+        "https://discord.gg/aRJmz95KWa": {
+          "code": "aRJmz95KWa"
+        },
+        "https://www.discord.gg/aRJmz95KWa": {
+          "code": "aRJmz95KWa"
+        },
+        "www.discord.com/invite/aRJmz95KWa": {
+          "code": "aRJmz95KWa"
+        }
+      }
+    }
+  },
   "email": {
     "mailto": {
       "note": "This matches plain emails and mailto hyperlinks. This regex is intended for scraping and not as a validation. See why: [\"Your email validation logic is wrong\"](https://www.netmeister.org/blog/email.html).",
@@ -355,6 +388,35 @@
       }
     }
   },
+  "patreon": {
+    "profile": {
+      "note": "Matches Patreon user profile URLs, including /join/username, and excludes non-profile paths like /login or /posts.",
+      "regex": "^(?:https?:\\/\\/|\\/\\/)?(?:www\\.)?patreon\\.com\\/(?:join\\/)?(?P<username>(?!posts\\b|login\\b|signup\\b|discover\\b|messages\\b|home\\b|activity\\b|settings\\b|faq\\b|about\\b|policy\\b|apps\\b|support\\b|news\\b|blog\\b|podcast\\b|press\\b|careers\\b|search\\b|join\\b)[A-Za-z0-9_-]+)\\/?$",
+      "tests": {
+        "http://patreon.com/join/mkbhd": {
+          "username": "mkbhd"
+        },
+        "https://patreon.com/": null,
+        "https://patreon.com/join/mkbhd/": {
+          "username": "mkbhd"
+        },
+        "https://patreon.com/mkbhd": {
+          "username": "mkbhd"
+        },
+        "https://patreon.com/signup": null,
+        "https://www.patreon.com/join/": null,
+        "https://www.patreon.com/join/mkbhd": {
+          "username": "mkbhd"
+        },
+        "https://www.patreon.com/login": null,
+        "https://www.patreon.com/mkbhd": {
+          "username": "mkbhd"
+        },
+        "https://www.patreon.com/posts": null,
+        "https://www.patreon.com/posts/early-access-how-112938361?source=storefront": null
+      }
+    }
+  },
   "phone": {
     "phone number": {
       "note": "Should be cleaned afterwards to strip dots, spaces, etc.",
@@ -549,6 +611,9 @@
         },
         "http://open.spotify.com/playlist/37i9dQZF1DXcBWIGoYBM5M": {
           "id": "37i9dQZF1DXcBWIGoYBM5M"
+        },
+        "https://open.spotify.com/playlist/2JWoC2BRoUOHsPjcgxMIyk?si=75e79774dcdd481f&nd=1&dlsi=abeb6d548f2c4713": {
+          "id": "2JWoC2BRoUOHsPjcgxMIyk"
         },
         "https://open.spotify.com/playlist/37i9dQZF1DXcBWIGoYBM5M": {
           "id": "37i9dQZF1DXcBWIGoYBM5M"

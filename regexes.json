@@ -196,6 +196,66 @@
       }
     }
   },
+  "link_in_bio": {
+    "profile": {
+      "note": "Matches profile pages on popular 'link in bio' platforms (e.g. Linktree, Beacons, Carrd, etc.) with optional protocol and www subdomain.",
+      "regex": "^(?:https?:\\/\\/|\\/\\/)?(?:www\\.)?(?:linktr\\.ee|linktree\\.com|beacons\\.ai|bio\\.fm|camps\\.bio|carrd\\.co|lnk\\.bio|linkin\\.bio|contactinbio\\.com|taplink\\.cc|shorby\\.io|milkshake\\.app|linkpop\\.com|about\\.me|koji\\.app|url\\.bio|bio\\.link|ping\\.bio|use1\\.link|bio\\.site)\\/(?P<username>[A-Za-z0-9][A-Za-z0-9_-]*)\\/?$",
+      "tests": {
+        "about.me/johnsmith": {
+          "username": "johnsmith"
+        },
+        "bio.fm/johnsmith": {
+          "username": "johnsmith"
+        },
+        "bio.link/johnsmith": {
+          "username": "johnsmith"
+        },
+        "bio.site/": null,
+        "bio.site/allfourmusic": {
+          "username": "allfourmusic"
+        },
+        "http://www.linktree.com/john_smith": {
+          "username": "john_smith"
+        },
+        "https://carrd.co/johnsmith": {
+          "username": "johnsmith"
+        },
+        "https://linktr.ee": null,
+        "https://linktr.ee/": null,
+        "https://linktr.ee/johnsmith": {
+          "username": "johnsmith"
+        },
+        "koji.app/": null,
+        "koji.app/john_smith": {
+          "username": "john_smith"
+        },
+        "linkin.bio/": null,
+        "milkshake.app/johnsmith": {
+          "username": "johnsmith"
+        },
+        "ping.bio/johnsmith": {
+          "username": "johnsmith"
+        },
+        "randomsite.com/johnsmith": null,
+        "shorby.io/johnsmith": {
+          "username": "johnsmith"
+        },
+        "url.bio/johnsmith": {
+          "username": "johnsmith"
+        },
+        "use1.link/": null,
+        "use1.link/AudibleGenius": {
+          "username": "AudibleGenius"
+        },
+        "www.beacons.ai/john-smith": {
+          "username": "john-smith"
+        },
+        "www.bio.site/allfourmusic": {
+          "username": "allfourmusic"
+        }
+      }
+    }
+  },
   "linkedin": {
     "company": {
       "note": "This matches companies and schools. Permalink is an integer id or a slug. The id permalinks redirect to the slug permalinks as soon as one is set. Permalinks can contain special characters. Recently, company links that are actually schools get redirected to newly introduced /school/ permalinks, see the university example below.",

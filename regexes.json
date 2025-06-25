@@ -472,14 +472,24 @@
   },
   "youtube": {
     "channel": {
-      "regex": "(?:https?:)?\\/\\/(?:[A-z]+\\.)?youtube.com\\/channel\\/(?P<id>[A-z0-9-\\_]+)\\/?",
+      "regex": "^(?:https?:)?\\/\\/(?:www\\.)?(?:youtube\\.com\\/(?:channel\\/(?P<id>[A-Za-z0-9_-]+)|c\\/(?P<custom>[A-Za-z0-9_-]+)|@?(?P<handle>[A-Za-z0-9_-]+)))\\/?$",
       "tests": {
+        "https://www.youtube.com/@JPPGmbH": {
+          "handle": "JPPGmbH"
+        },
+        "https://www.youtube.com/c/JPPGmbH": {
+          "custom": "JPPGmbH"
+        },
         "https://www.youtube.com/channel/UC3y00Z1zFPc-8Z9xg8ydC-A": {
           "id": "UC3y00Z1zFPc-8Z9xg8ydC-A"
         },
         "https://www.youtube.com/channel/UCtAh1m085QkEKYNg0j_6r8A": {
           "id": "UCtAh1m085QkEKYNg0j_6r8A"
-        }
+        },
+        "https://www.youtube.com/user/JPPGmbH": null,
+        "https://www.youtube.com/watch?v=dQw4w9WgXcQ": null,
+        "https://youtu.be/dQw4w9WgXcQ": null,
+        "https://youtube.com/embed/dQw4w9WgXcQ": null
       }
     },
     "user": {
